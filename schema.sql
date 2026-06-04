@@ -97,3 +97,13 @@ CREATE TABLE IF NOT EXISTS sale_details (
     FOREIGN KEY (id_sale) REFERENCES sales(id),
     FOREIGN KEY (id_car) REFERENCES cars(id)
 );
+
+-- Таблица пользователей (с поддержкой ролей)
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL CHECK(role IN ('user', 'manager', 'senior_manager', 'owner')),
+    customer_id INTEGER REFERENCES customers(id),
+    employee_id INTEGER REFERENCES employees(id)
+);
