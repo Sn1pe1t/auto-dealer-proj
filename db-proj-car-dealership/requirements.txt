@@ -1,2 +1,0 @@
-# AutoDealer GUI приложение - зависимости
-autodealer-core>=0.1.0
