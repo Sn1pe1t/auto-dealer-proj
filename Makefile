@@ -1,4 +1,4 @@
 .PHONY: test
 
 test:
-	pytest -v
+	python -m pytest tests/ -v --cov=autodealer_app --cov-report=term-missing

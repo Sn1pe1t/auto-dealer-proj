@@ -23,9 +23,6 @@ def init_db():
         conn.close()
         raise SystemExit
 
-    # Удаляем старый триггер, если он остался (на всякий случай)
-    conn.execute("DROP TRIGGER IF EXISTS deduct_quantity")
-
     cur = conn.cursor()
     cur.execute("SELECT COUNT(*) FROM cars")
     if cur.fetchone()[0] == 0:

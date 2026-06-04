@@ -97,8 +97,3 @@ CREATE TABLE IF NOT EXISTS sale_details (
     FOREIGN KEY (id_sale) REFERENCES sales(id),
     FOREIGN KEY (id_car) REFERENCES cars(id)
 );
-
-CREATE TRIGGER IF NOT EXISTS deduct_quantity AFTER INSERT ON sale_details
-BEGIN
-    UPDATE cars SET quantity = quantity - NEW.quantity WHERE id = NEW.id_car;
-END;
