@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+*.db
+.git
+.gitignore
+README.md
+Makefile
+htmlcov/
+.pytest_cache/
+.venv
+venv/
+tests/
+packages/autodealer_core.egg-info
+packages/autodealer_core/dist/
+packages/autodealer_core/build/
+autodealer.db
