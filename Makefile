@@ -1,18 +1,23 @@
-.PHONY: help install run test clean init-db lint test-core test-api
+.PHONY: help install run test clean init-db lint test-core test-api docker-build docker-run docker-up docker-down
 
 help:
 	@echo "Доступные команды:"
 	@echo "  make install       - установить зависимости и локальный пакет"
-	@echo "  make run           - запустить веб-приложение (через run.py)"
-	@echo "  make test          - запустить все тесты (pytest) с покрытием"
+	@echo "  make run           - запустить веб-приложение"
+	@echo "  make test          - запустить все тесты с покрытием"
 	@echo "  make test-core     - запустить только модульные тесты (autodealer_core)"
 	@echo "  make test-api      - запустить только API тесты"
 	@echo "  make clean         - удалить кэш и временные файлы"
 	@echo "  make init-db       - удалить существующую БД (осторожно!)"
 	@echo "  make lint          - проверить код flake8"
+	@echo "  make docker-build  - собрать Docker-образ"
+	@echo "  make docker-run    - запустить контейнер (без Compose)"
+	@echo "  make docker-up     - поднять сервисы через docker-compose"
+	@echo "  make docker-down   - остановить и удалить контейнеры"
 
 install:
 	pip install -r requirements.txt
+	pip install -e .
 
 run:
 	python run.py
@@ -36,4 +41,16 @@ init-db:
 	@echo "База данных удалена. При следующем запуске будет создана новая."
 
 lint:
-	flake8 autodealer/ packages/autodealer_core/ tests/ --max-line-length=120 --ignore=E501,W503 || echo "flake8 не установлен, установите: pip install flake8"
+	flake8 autodealer/ tests/ --max-line-length=120 --ignore=E501,W503 || echo "flake8 не установлен, установите: pip install flake8"
+
+docker-build:
+	docker build -t autodealer-app .
+
+docker-run:
+	docker run -p 5000:5000 autodealer-app
+
+docker-up:
+	docker-compose up --build
+
+docker-down:
+	docker-compose down
