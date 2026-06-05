@@ -32,23 +32,36 @@
 
 ```
 .
-├── autodealer/               # Основное Flask-приложение
-│   ├── __init__.py           # Фабрика приложения
-│   ├── auth.py               # Декораторы аутентификации
-│   ├── db_queries.py         # Все SQL-запросы
-│   ├── routes.py             # Blueprint с маршрутами API
-│   └── templates/            # HTML-шаблоны (index.html)
-├── docs/                     # Документация (спецификация, архитектура)
-├── tests/                    # Модульные и интеграционные тесты
-├── run.py                    # Точка входа для запуска сервера
-├── schema.sql                # Схема базы данных
-├── init_data.csv             # Начальные данные (справочники, тестовые пользователи, автомобили)
-├── requirements.txt          # Зависимости (Flask, autodealer-core)
-├── requirements-dev.txt      # Зависимости для разработки (pytest, mkdocs, flake8 и др.)
-├── Makefile                  # Автоматизация команд
-├── Dockerfile                # Образ приложения
-├── docker-compose.yaml       # Локальный запуск через Compose
-└── README.md                 # Этот файл
+├── autodealer/                 # Основное Flask-приложение
+│   ├── __init__.py             # Фабрика приложения
+│   ├── auth.py                 # Декораторы аутентификации
+│   ├── db_queries.py           # Все SQL-запросы
+│   ├── routes.py               # Blueprint с маршрутами API
+│   └── templates/              # HTML-шаблоны
+│       └── index.html
+├── docs/                       # Проектная документация
+│   ├── architecture.md         # Архитектурное описание (с диаграммами Mermaid)
+│   ├── index.md                # Главная страница документации
+│   └── specification.md        # Спецификация предметной области
+├── tests/                      # Тесты
+│   ├── conftest.py             # Фикстуры pytest
+│   ├── test_api.py             # Интеграционные тесты API
+│   ├── test_calculations.py    # Модульные тесты для autodealer_core (расчёты)
+│   ├── test_reporting.py       # Модульные тесты для autodealer_core (отчёты)
+│   └── test_smoke.py           # Дымовые тесты (наличие файлов)
+├── .dockerignore
+├── .gitignore
+├── .python-version             # Фиксация версии Python (3.11)
+├── Dockerfile
+├── LICENSE
+├── Makefile
+├── README.md
+├── docker-compose.yaml
+├── init_data.csv               # Начальные данные для БД
+├── mkdocs.yml                  # Конфигурация MkDocs
+├── requirements.txt            # Все зависимости (Flask, pytest, mkdocs, flake8)
+├── run.py                      # Точка входа для запуска приложения
+└── schema.sql                  # Схема базы данных
 ```
 
 ## 🚀 Быстрый старт (локально)
