@@ -3,12 +3,16 @@
 ## 1. Контекстная диаграмма (C4 level 1)
 ```mermaid
 graph TD
-    User[Пользователь] -->|HTTP| App[Автосалон]
+    User[Пользователь] -->|HTTP| App[Автосалон CRM]
+    Reviewer[Рецензент - Проверяющий] -->|Git clone / make| App
     App -->|SQL| DB[(SQLite DB)]
     App -->|CSV import| CSV[init_data.csv]
     User -->|CLI| PyPI[pip install autodealer-core]
     Admin[Администратор] -->|Docker commands| Docker[Docker Engine]
     Docker -->|контейнер| App
+    CI[CI/CD GitHub Actions] -->|запуск тестов| App
+    CI -->|сборка документации| DocsSite[Сайт документации]
+    Developer[Разработчик] -->|publish| PyPIRegistry[PyPI registry]
 ```
 
 Система представляет собой веб-приложение, которое взаимодействует с базой данных SQLite и может загружать начальные данные из CSV. Пользователи обращаются через браузер. Библиотека `autodealer-core` может использоваться отдельно (например, в CLI). Администратор управляет развёртыванием через Docker.
@@ -19,11 +23,13 @@ graph TD
 graph TD
     Browser[Браузер] -->|HTTP/HTTPS| Flask[Flask-приложение]
     Flask -->|SQLite3| DB[(SQLite DB)]
-    Flask -->|CSV| CSV[init_data.csv]
+    Flask -->|чтение| CSV[init_data.csv]
     Flask -->|вызовы| Core[Библиотека autodealer-core]
     Core -->|чистые функции| Logic[Доменная логика: расчёт заказа, отчёты]
     Flask -->|рендеринг| Templates[Шаблоны HTML/CSS/JS]
     Browser -->|загрузка| Templates
+    Flask -->|сессии| Session[Сессии Flask]
+    Core -->|не зависит от БД| Pure[Чистые функции]
 ```
 
 Flask-приложение – содержит маршруты API, аутентификацию, работу с БД.
@@ -37,11 +43,47 @@ CSV-файл – используется для инициализации сп
 ## 3. Use case диаграмма (основные сценарии)
 
 ```mermaid
-graph TD
-    User[Клиент] -->|Каталог, фильтры, корзина, заказ, свои заказы, топ, профиль| S[Автосалон CRM]
-    Manager[Менеджер] -->|Всё из клиента + заказ на любого + все заказы + отчёты + загрузка CSV| S
-    Senior[Старший менеджер] -->|Всё из менеджера + назначение менеджеров| S
-    Owner[Владелец] -->|Всё из старшего + назначение старших + полный доступ| S
+graph LR
+    subgraph Клиент
+        A1[Просмотр каталога]
+        A2[Фильтрация авто]
+        A3[Управление корзиной]
+        A4[Оформление заказа]
+        A5[Просмотр своих заказов]
+        A6[Просмотр топа продаж]
+        A7[Редактирование профиля]
+        A8[Смена пароля]
+    end
+
+    subgraph Менеджер
+        B1[Всё из клиента]
+        B2[Оформление заказа на любого]
+        B3[Просмотр всех заказов]
+        B4[Формирование отчёта по дате]
+        B5[Загрузка автомобилей из CSV]
+    end
+
+    subgraph Старший менеджер
+        C1[Всё из менеджера]
+        C2[Назначение менеджеров]
+        C3[Снятие менеджеров]
+    end
+
+    subgraph Владелец
+        D1[Всё из старшего менеджера]
+        D2[Назначение старших менеджеров]
+        D3[Снятие старших менеджеров]
+        D4[Полный доступ к данным]
+    end
+
+    Client[Клиент] --> A1 & A2 & A3 & A4 & A5 & A6 & A7 & A8
+    Manager[Менеджер] --> B1 & B2 & B3 & B4 & B5
+    Senior[Старший менеджер] --> C1 & C2 & C3
+    Owner[Владелец] --> D1 & D2 & D3 & D4
+
+    Manager -.->|расширяет| Client
+    Senior -.->|расширяет| Manager
+    Owner -.->|расширяет| Senior
 ```
 
 ## 4. Диаграмма последовательности для сценария «Оформление заказа»
@@ -98,79 +140,7 @@ sequenceDiagram
     end
 ```
 
-## 5. Модель данных (упрощённая ER-диаграмма)
-
-```mermaid
-erDiagram
-    users {
-        int id PK
-        string username
-        string password_hash
-        string role
-        int customer_id FK
-        int employee_id FK
-    }
-    customers {
-        int id PK
-        string first_name
-        string last_name
-        string phone
-        string email
-    }
-    employees {
-        int id PK
-        string name
-        string surname
-        int id_job_title FK
-    }
-    job_titles {
-        int id PK
-        string name
-    }
-    cars {
-        int id PK
-        string brand
-        string model
-        int year
-        string vin
-        int price
-        int quantity
-        int id_category FK
-        int id_steering FK
-        int power
-        float engine_volume
-        int id_fuel_type FK
-        int id_transmission FK
-        int id_drive FK
-        int id_condition FK
-        int mileage
-    }
-    sales {
-        int id PK
-        float sale_date
-        int id_customer FK
-        int id_employee FK
-        float total_amount
-    }
-    sale_details {
-        int id PK
-        int id_sale FK
-        int id_car FK
-        int quantity
-        float price_at_sale
-        int in_stock_at_sale
-    }
-
-    users ||--o| customers : "customer_id"
-    users ||--o| employees : "employee_id"
-    employees ||--|| job_titles : "id_job_title"
-    sales ||--|| customers : "id_customer"
-    sales ||--|| employees : "id_employee"
-    sale_details ||--|| sales : "id_sale"
-    sale_details ||--|| cars : "id_car"
-```
-
-## 6. Принятые архитектурные решения
+## 5. Принятые архитектурные решения
 
 | Решение | Обоснование |
 |---------|-------------|
@@ -183,7 +153,7 @@ erDiagram
 | Тестирование pytest + покрытие | Защита от регрессий, документация поведения. |
 | MkDocs + Mermaid | Автоматическая сборка документации с диаграммами, хранение исходников в репозитории. |
 
-## 7. Используемые инструменты разработки
+## 6. Используемые инструменты разработки
 
 | Инструмент | Назначение |
 |------------|------------|
