@@ -61,30 +61,18 @@
 
 ### Установка
 
-1. **Клонировать репозиторий**
+1. **Установить зависимости**
    ```bash
-   git clone https://github.com/Sn1pe1t/auto-dealer-proj.git
-   cd auto-dealer-proj
-   ```
-
-2. **Создать виртуальное окружение**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate      # Linux/Mac
-   venv\Scripts\activate         # Windows
-   ```
-
-3. **Установить зависимости**
-   ```bash
-   make install
+   make setup
    ```
    или вручную:
    ```bash
    pip install -r requirements.txt
+   pip install -r requirements-dev.txt
    ```
-   (Библиотека `autodealer-core` устанавливается из PyPI)
+   (Созданная библиотека `autodealer-core` устанавливается из PyPI)
 
-4. **Запустить приложение**
+2. **Запустить приложение**
    ```bash
    make run
    ```
@@ -130,7 +118,7 @@ pip install -r requirements-dev.txt
 make docs
 ```
 
-Сгенерированный сайт появится в папке `site/`. Откройте `site/index.html` (при запуске `make serve-docs` это http://127.0.0.1:8000) в браузере.  
+Сгенерированный сайт появится в папке `site/`. Сервер будет доступен по адресу: [http://127.0.0.1:8000](http://127.0.0.1:8000).  
 Документация включает:
 - Спецификацию предметной области (`docs/specification.md`)
 - Архитектурное описание с диаграммами C4 и sequence (`docs/architecture.md`)
