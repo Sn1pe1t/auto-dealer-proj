@@ -10,4 +10,4 @@ def test_app_module_exists():
     assert os.path.exists('run.py'), "run.py not found"
 
 def test_templates_exist():
-    assert os.path.exists('templates/index.html'), "templates/index.html not found"
+    assert os.path.exists('autodealer/templates/index.html'), "templates/index.html not found"
