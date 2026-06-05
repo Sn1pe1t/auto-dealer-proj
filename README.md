@@ -1,7 +1,7 @@
-## `README.md` для вашего проекта
+Готово! Вот полностью собранный, чистый текст для твоего файла `README.md`. Ты можешь скопировать его целиком из блока ниже и сохранить в корне своего репозитория.
 
 ```markdown
-# 🚗 Автосалон
+# 🚗 Автосалон CRM
 
 Веб-приложение для управления заказами в автосалоне.  
 Поддерживает ролевую модель: клиент, менеджер, старший менеджер, владелец.  
@@ -29,12 +29,16 @@
 - **Контейнеризация:** Docker, Docker Compose
 - **Документация:** MkDocs (собирается из Markdown + Mermaid)
 
+---
+
 ## 📁 Структура проекта
 
+
 ```
+
 .
 ├── autodealer/               # Основное Flask-приложение
-│   ├── __init__.py           # Фабрика приложения
+│   ├── **init**.py           # Фабрика приложения
 │   ├── auth.py               # Декораторы аутентификации
 │   ├── db_queries.py         # Все SQL-запросы
 │   ├── routes.py             # Blueprint с маршрутами API
@@ -50,15 +54,18 @@
 ├── Dockerfile                # Образ приложения
 ├── docker-compose.yaml       # Локальный запуск через Compose
 └── README.md                 # Этот файл
+
 ```
+
+---
 
 ## 🚀 Быстрый старт (локально)
 
 ### 1. Клонировать репозиторий
-
 ```bash
-git clone https://github.com/Sn1pe1t/auto-dealer-proj.git
+git clone [https://github.com/Sn1pe1t/auto-dealer-proj.git](https://github.com/Sn1pe1t/auto-dealer-proj.git)
 cd auto-dealer-proj
+
 ```
 
 ### 2. Создать виртуальное окружение
@@ -68,29 +75,35 @@ python -m venv venv
 source venv/bin/activate      # Linux/Mac
 # или
 venv\Scripts\activate         # Windows
+
 ```
 
 ### 3. Установить зависимости
 
 ```bash
 make install
+
 ```
 
 или вручную:
 
 ```bash
 pip install -r requirements.txt
+
 ```
 
-(Библиотека `autodealer-core` устанавливается из PyPI)
+*(Библиотека `autodealer-core` устанавливается автоматически из PyPI)*
 
 ### 4. Запустить приложение
 
 ```bash
 make run
+
 ```
 
 Сервер будет доступен по адресу: [http://127.0.0.1:5000](http://127.0.0.1:5000)
+
+---
 
 ## 🐳 Запуск в Docker (рекомендуемый способ)
 
@@ -98,9 +111,12 @@ make run
 
 ```bash
 make docker-up
+
 ```
 
-Приложение поднимется в контейнере, порт 5000 будет проброшен. База данных сохраняется в томе, данные не теряются при перезапуске.
+Приложение подниметься в контейнере, порт 5000 будет проброшен. База данных сохраняется в Docker volume, так что данные не потеряются при перезапуске.
+
+---
 
 ## 🧪 Тестирование
 
@@ -108,9 +124,12 @@ make docker-up
 make test          # все тесты + отчёт о покрытии
 make test-core     # только модульные тесты autodealer-core
 make test-api      # только API тесты
+
 ```
 
-Покрытие можно посмотреть в `htmlcov/index.html`.
+Подробный HTML-отчёт о покрытии можно посмотреть в папке `htmlcov/index.html`.
+
+---
 
 ## 📄 Документация
 
@@ -118,76 +137,100 @@ make test-api      # только API тесты
 
 ```bash
 pip install -r requirements-dev.txt
+
 ```
 
-Затем:
+Затем соберите документацию:
 
 ```bash
 make docs
+
 ```
 
-Сгенерированный сайт появится в папке `site/`.  
-Документация включает:
-- Спецификацию предметной области (`docs/specification.md`)
-- Архитектурное описание с диаграммами C4 и sequence (`docs/architecture.md`)
+Сгенерированный статический сайт появится в папке `site/`.
+
+Документация включает в себя:
+
+* Спецификацию предметной области (`docs/specification.md`)
+* Архитектурное описание с диаграммами C4 и Sequence (`docs/architecture.md`)
+
+---
 
 ## 🔑 Тестовые учётные записи
 
-| Роль               | Логин    | Пароль   |
-|--------------------|----------|----------|
-| Владелец           | `owner`  | `owner`  |
-| Старший менеджер   | `john`   | `john`   |
-| Менеджер           | `manager`| `manager`|
-| Клиент             | `ivan`   | `ivan`   |
-| Клиент             | `maria`  | `maria`  |
+| Роль | Логин | Пароль |
+| --- | --- | --- |
+| **Владелец** | `owner` | `owner` |
+| **Старший менеджер** | `john` | `john` |
+| **Менеджер** | `manager` | `manager` |
+| **Клиент** | `ivan` | `ivan` |
+| **Клиент** | `maria` | `maria` |
+
+---
 
 ## 🛠️ Доступные команды Make
 
-| Команда           | Действие |
-|-------------------|----------|
-| `make install`    | Установить зависимости (`requirements.txt`) |
-| `make run`        | Запустить приложение (локально) |
-| `make test`       | Запустить все тесты с отчётом о покрытии |
-| `make test-core`  | Только модульные тесты |
-| `make test-api`   | Только API тесты |
-| `make clean`      | Удалить кэш, временные файлы, отчёты |
-| `make init-db`    | Удалить `autodealer.db` (сброс данных) |
-| `make lint`       | Проверить код flake8 (если установлен) |
-| `make docs`       | Собрать документацию MkDocs |
-| `make docker-up`  | Поднять контейнеры (docker-compose) |
-| `make docker-down`| Остановить и удалить контейнеры |
-| `make docker-build`| Только собрать образ |
+| Команда | Действие |
+| --- | --- |
+| `make install` | Установить зависимости (`requirements.txt`) |
+| `make run` | Запустить приложение локально |
+| `make test` | Запустить все тесты с отчётом о покрытии |
+| `make test-core` | Запустить только модульные тесты ядра |
+| `make test-api` | Запустить только API тесты |
+| `make clean` | Удалить кэш, временные файлы и отчёты |
+| `make init-db` | Пересоздать базу данных `autodealer.db` (сброс данных) |
+| `make lint` | Проверить код линтером flake8 |
+| `make docs` | Собрать документацию MkDocs |
+| `make docker-up` | Поднять контейнеры (docker-compose) |
+| `make docker-down` | Остановить и удалить контейнеры |
+| `make docker-build` | Собрать Docker-образ |
+
+---
 
 ## 📦 Переиспользуемая библиотека
 
-Доменная логика (расчёт заказа, агрегация отчётов) вынесена в отдельный пакет **`autodealer-core`**, опубликованный на PyPI:
+Доменная логика (расчет заказа, агрегация отчетов) вынесена в отдельный независимый пакет **`autodealer-core`**, опубликованный на PyPI:
 
-[https://pypi.org/project/autodealer-core/](https://pypi.org/project/autodealer-core/)
+👉 [https://pypi.org/project/autodealer-core/](https://pypi.org/project/autodealer-core/)
 
-Установка из PyPI:
+Установка:
 
 ```bash
 pip install autodealer-core
+
 ```
 
-Использование:
+Пример использования в коде:
 
 ```python
 from autodealer_core import calculate_sale_items, aggregate_report, top_sales
+
 ```
+
+---
 
 ## 🤝 Вклад в проект
 
-Если вы хотите предложить улучшения, создайте issue, затем ветку и Pull Request.  
-Убедитесь, что тесты проходят, а документация обновлена.
+Если вы хотите предложить улучшения:
+
+1. Создайте Fork репозитория.
+2. Создайте свою ветку (`git checkout -b feature/AmazingFeature`).
+3. Сделайте коммит (`git commit -m 'Add some AmazingFeature'`).
+4. Отправьте ветку в GitHub (`git push origin feature/AmazingFeature`).
+5. Откройте Pull Request.
+
+Убедитесь, что все тесты проходят, а документация обновлена.
 
 ## 📜 Лицензия
 
-MIT
+Проект распространяется под лицензией **MIT**. Подробнее см. в файле LICENSE.
 
 ## 📧 Контакты
 
-Автор: Sn1pe1t  
-Email: enderman303040@gmail.com  
-GitHub: [Sn1pe1t/auto-dealer-proj](https://github.com/Sn1pe1t/auto-dealer-proj)
+* **Автор:** Sn1pe1t
+* **Email:** enderman303040@gmail.com
+* **GitHub:** [Sn1pe1t/auto-dealer-proj](https://github.com/Sn1pe1t/auto-dealer-proj)
+
+```
+
 ```
