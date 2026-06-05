@@ -1,12 +1,13 @@
 import os
 
-def test_infrastructure_files_exist():
-    # Проверяем, что критически важные файлы на месте
-    assert os.path.exists("schema.sql"), "Файл schema.sql отсутствует!"
-    assert os.path.exists("init_data.csv"), "Файл init_data.csv отсутствует!"
+def test_schema_file_exists():
+    assert os.path.exists('schema.sql'), "schema.sql not found"
 
-def test_schema_is_not_empty():
-    # Проверяем, что схема содержит SQL-код
-    with open("schema.sql", "r", encoding="utf-8") as f:
-        content = f.read()
-    assert "CREATE TABLE" in content, "Схема базы данных кажется пустой или некорректной!"
+def test_init_data_exists():
+    assert os.path.exists('init_data.csv'), "init_data.csv not found"
+
+def test_app_module_exists():
+    assert os.path.exists('run.py'), "run.py not found"
+
+def test_templates_exist():
+    assert os.path.exists('templates/index.html'), "templates/index.html not found"

@@ -556,12 +556,41 @@
         async function showTopSales() {
                 const data = await fetchJSON('/api/top_sales');
                 const container = document.getElementById('top-sales-output');
-                if (!data.length) { container.innerHTML = '<div class="card">Нет данных</div>'; return; }
-                let html = '<div class="card"><h3>🏆 Топ-10 продаваемых автомобилей</h3><table><thead><tr><th>Марка/Модель</th><th>Продано, шт</th><th>Выручка</th></tr></thead><tbody>';
-                for (const r of data) {
-                    html += `<tr><td>${r.brand} ${r.model}</td><td>${r.total_qty}</td><td>${Number(r.total_revenue).toLocaleString()} ₽</td></tr>`;
+                if (!data.length) {
+                    container.innerHTML = '<div class="card">Нет данных</div>';
+                    return;
                 }
-                html += `</tbody></table></div>`;
+                let html = `
+        <div class="card">
+            <h3>🏆 Топ-10 продаваемых автомобилей</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Марка/Модель</th>
+                        <th>Продано, шт</th>
+                        <th>Выручка</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+                for (const r of data) {
+                    // Поля могут называться brand_model или car, total_qty или qty, total_revenue или revenue
+                    const carName = r.brand_model || r.car || 'Неизвестно';
+                    const qty = r.total_qty || r.qty || 0;
+                    const revenue = r.total_revenue || r.revenue || 0;
+                    html += `
+            <tr>
+                <td>${carName}</td>
+                <td>${qty}</td>
+                <td>${Number(revenue).toLocaleString()} ₽</td>
+            </tr>
+        `;
+                }
+                html += `
+                </tbody>
+            </table>
+        </div>
+    `;
                 container.innerHTML = html;
             }
 
