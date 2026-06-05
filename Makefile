@@ -1,23 +1,31 @@
-.PHONY: help install install-dev run test clean init-db lint test-core test-api docs serve-docs docker-build docker-run docker-up docker-down
+.PHONY: help install install-dev setup run test test-core test-api clean init-db lint docs serve-docs docker-build docker-run docker-up docker-down check
 
+# ------------------------------
+# Help
+# ------------------------------
 help:
 	@echo "Available commands:"
 	@echo "  make install       - install production dependencies"
-	@echo "  make install-dev   - install dependencies for development"
-	@echo "  make run           - run the application"
+	@echo "  make install-dev   - install development dependencies (pytest, mkdocs, etc.)"
+	@echo "  make setup         - install all dependencies (prod + dev)"
+	@echo "  make run           - run the web application locally"
 	@echo "  make test          - run all tests with coverage report"
-	@echo "  make test-core     - run tests for core calculations and reporting logic"
-	@echo "  make test-api      - run tests for API endpoints and smoke tests"
-	@echo "  make clean         - delete cache files and test reports to start fresh"
-	@echo "  make init-db       - delete the existing database file to start fresh (use with caution)"
-	@echo "  make lint          - test code style with flake8"
-	@echo "  make docs          - build documentation using MkDocs"
-	@echo "  make serve-docs    - start local server for documentation preview"
-	@echo "  make docker-build  - build the Docker image"
-	@echo "  make docker-run    - start a container without docker-compose"
-	@echo "  make docker-up     - start docker-compose services"
-	@echo "  make docker-down   - stop and remove docker-compose services"
+	@echo "  make test-core     - run only unit tests for autodealer_core"
+	@echo "  make test-api      - run only API integration tests"
+	@echo "  make clean         - remove cache, reports, temporary files"
+	@echo "  make init-db       - delete autodealer.db file (reset database)"
+	@echo "  make lint          - run flake8 linter (requires flake8)"
+	@echo "  make docs          - build static documentation with MkDocs"
+	@echo "  make serve-docs    - start documentation server (http://127.0.0.1:8000)"
+	@echo "  make docker-build  - build Docker image"
+	@echo "  make docker-run    - run container (without Compose)"
+	@echo "  make docker-up     - start services using docker-compose"
+	@echo "  make docker-down   - stop and remove containers"
+	@echo "  make check         - run all checks (tests, linter, docs)"
 
+# ------------------------------
+# Dependency installation
+# ------------------------------
 install:
 	pip install -r requirements.txt
 
@@ -25,11 +33,17 @@ install-dev:
 	pip install -r requirements-dev.txt
 
 setup: install install-dev
-	@echo "ALL DEPENDENCIES INSTALLED. You can now run the application with 'make run' or run tests with 'make test'."
+	@echo "✅ All dependencies (production and dev) installed"
 
+# ------------------------------
+# Run application
+# ------------------------------
 run:
 	python run.py
 
+# ------------------------------
+# Testing
+# ------------------------------
 test:
 	pytest tests/ -v --cov=autodealer_core --cov=autodealer --cov=. --cov-report=term-missing --cov-report=html
 
@@ -39,25 +53,37 @@ test-core:
 test-api:
 	pytest tests/test_api.py tests/test_smoke.py -v
 
+# ------------------------------
+# Cleanup
+# ------------------------------
 clean:
-	rm -rf .pytest_cache .coverage htmlcov
+	rm -rf .pytest_cache .coverage htmlcov site
 	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name "*.pyc" -delete
 
 init-db:
 	rm -f autodealer.db
-	@echo "Database file 'autodealer.db' has been removed. You can now initialize a new database by running the application or using a setup script."
+	@echo "Database deleted. A new one will be created on next run."
 
+# ------------------------------
+# Linter
+# ------------------------------
 lint:
-	flake8 autodealer/ tests/ --max-line-length=120 --ignore=E501,W503 || echo "flake8 is not installed, please download: pip install flake8"
+	flake8 autodealer/ tests/ --max-line-length=120 --ignore=E501,W503 || echo "flake8 not installed, run: pip install flake8"
 
+# ------------------------------
+# Documentation
+# ------------------------------
 docs:
 	mkdocs build --clean
-	@echo "Documentation built in the 'site' folder."
+	@echo "Documentation built in site/ folder"
 
 serve-docs:
 	mkdocs serve
 
+# ------------------------------
+# Docker
+# ------------------------------
 docker-build:
 	docker build -t autodealer-app .
 
@@ -69,3 +95,9 @@ docker-up:
 
 docker-down:
 	docker-compose down
+
+# ------------------------------
+# Comprehensive check
+# ------------------------------
+check: test test-core test-api lint docs
+	@echo "✅ All checks passed successfully"

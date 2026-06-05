@@ -55,7 +55,7 @@
 
 ### Требования
 
-- Python 3.11 (рекомендуется)
+- Python 3.11 (рекомендуется, фиксация версии через `.python-version`)
 - pip (обычно идёт с Python)
 - (опционально) Docker Desktop для контейнерного запуска
 
@@ -111,6 +111,7 @@ make docker-down
 make test          # все тесты + отчёт о покрытии
 make test-core     # только модульные тесты autodealer-core
 make test-api      # только API тесты
+make check         # Запустите все проверки (тесты, линтер, сборку документации) одной командой
 ```
 
 Покрытие можно посмотреть в `htmlcov/index.html`.
@@ -129,7 +130,7 @@ pip install -r requirements-dev.txt
 make docs
 ```
 
-Сгенерированный сайт появится в папке `site/`. Откройте `site/index.html` в браузере.  
+Сгенерированный сайт появится в папке `site/`. Откройте `site/index.html` (при запуске `make serve-docs` это http://127.0.0.1:8000) в браузере.  
 Документация включает:
 - Спецификацию предметной области (`docs/specification.md`)
 - Архитектурное описание с диаграммами C4 и sequence (`docs/architecture.md`)
@@ -146,20 +147,25 @@ make docs
 
 ## 🛠️ Доступные команды Make
 
-| Команда           | Действие |
-|-------------------|----------|
-| `make install`    | Установить зависимости (`requirements.txt`) |
-| `make run`        | Запустить приложение (локально) |
-| `make test`       | Запустить все тесты с отчётом о покрытии |
-| `make test-core`  | Только модульные тесты |
-| `make test-api`   | Только API тесты |
-| `make clean`      | Удалить кэш, временные файлы, отчёты |
-| `make init-db`    | Удалить `autodealer.db` (сброс данных) |
-| `make lint`       | Проверить код flake8 (если установлен) |
-| `make docs`       | Собрать документацию MkDocs |
-| `make docker-up`  | Поднять контейнеры (docker-compose) |
-| `make docker-down`| Остановить и удалить контейнеры |
-| `make docker-build`| Только собрать образ |
+| Команда              | Действие |
+|----------------------|----------|
+| `make install`       | Установить зависимости production (`requirements.txt`) |
+| `make install-dev`   | Установить зависимости для разработки (`requirements-dev.txt`) |
+| `make setup`         | Установить все зависимости (production + dev) |
+| `make run`           | Запустить приложение локально (Flask) |
+| `make test`          | Запустить все тесты с отчётом о покрытии |
+| `make test-core`     | Запустить только модульные тесты библиотеки `autodealer-core` |
+| `make test-api`      | Запустить только интеграционные API-тесты |
+| `make clean`         | Удалить кэш, временные файлы, отчёты о покрытии |
+| `make init-db`       | Удалить файл `autodealer.db` (сброс данных) |
+| `make lint`          | Проверить код с помощью `flake8` (если установлен) |
+| `make docs`          | Собрать статическую документацию в папку `site/` |
+| `make serve-docs`    | Запустить локальный сервер документации на `http://127.0.0.1:8000` |
+| `make docker-build`  | Собрать Docker-образ `autodealer-app` |
+| `make docker-run`    | Запустить контейнер (без Compose) |
+| `make docker-up`     | Поднять все сервисы через `docker-compose up --build` |
+| `make docker-down`   | Остановить и удалить контейнеры |
+| `make check`         | Выполнить комплексную проверку (тесты + линтер + документация) |
 
 ## 📦 Переиспользуемая библиотека
 
