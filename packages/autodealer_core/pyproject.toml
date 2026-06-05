@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autodealer-core"
+version = "0.1.0"
+description = "Core business logic for car dealership: order splitting, preorder calculation, sales reporting and top sales"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Sn1pe1t", email = "enderman303040@gmail.com" }
+]
+requires-python = ">=3.8"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Sn1pe1t/auto-dealer-proj"
+Repository = "https://github.com/Sn1pe1t/auto-dealer-proj"
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["tests*"]
