@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./autodealer.db:/app/autodealer.db   # сохраняем БД между запусками
+    environment:
+      - FLASK_ENV=production
