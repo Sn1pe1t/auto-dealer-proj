@@ -5,18 +5,17 @@ import os
 import hashlib
 from datetime import datetime
 
-# ------------------------------------------------------------
-# Подключение к БД
-def get_db(db_name='autodealer.db'):
+DB_NAME = 'autodealer.db'   # будет переопределён в тестах
+
+def get_db(db_name=None):
+    if db_name is None:
+        db_name = DB_NAME
     conn = sqlite3.connect(db_name, timeout=10)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
     return conn
 
-# ------------------------------------------------------------
-# Инициализация БД и загрузка данных
 def init_db(conn, schema_file, init_data_file, load_initial_data_func):
-    """Выполняет инициализацию БД по схеме и CSV."""
     conn.execute("PRAGMA foreign_keys = OFF")
     with open(schema_file, 'r', encoding='utf-8') as f:
         conn.executescript(f.read())
@@ -26,7 +25,6 @@ def init_db(conn, schema_file, init_data_file, load_initial_data_func):
     conn.commit()
 
 def load_initial_data(conn, csv_file):
-    """Загружает данные из CSV в формате: таблица,значения... (первая колонка — имя таблицы)"""
     with open(csv_file, 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
         for row in reader:
@@ -40,12 +38,10 @@ def load_initial_data(conn, csv_file):
             columns = [col[1] for col in cur.fetchall()]
             if not columns:
                 continue
-            # Приводим количество значений к числу колонок
             if len(values) > len(columns):
                 values = values[:len(columns)]
             elif len(values) < len(columns):
                 values.extend([''] * (len(columns) - len(values)))
-            # Для таблицы users: хешируем пароль
             if table == 'users':
                 if len(values) >= 3 and values[2]:
                     values[2] = hashlib.sha256(values[2].encode()).hexdigest()

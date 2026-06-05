@@ -4,14 +4,16 @@ from datetime import datetime
 from collections import defaultdict
 import hashlib
 
-from app.auth import login_required, owner_required, senior_manager_required, manager_required
-from app.db_queries import get_db, get_filters_data, get_cars_with_filters, get_customers_by_role
-from app.db_queries import get_employees, get_sales_by_role, get_sale_details_by_id, get_car_info_by_id
-from app.db_queries import get_car_stock_and_price, update_car_quantity, insert_sale, insert_sale_detail
-from app.db_queries import get_report_data, get_top_sales_data, get_sales_today_data
-from app.db_queries import get_users_list, get_user_by_id, update_user_role, create_employee
-from app.db_queries import update_employee_job_title, get_customer_by_id, get_employee_by_id
-from app.db_queries import get_user_by_username, create_customer, create_user
+from autodealer.auth import login_required, owner_required, senior_manager_required, manager_required
+from autodealer.db_queries import (
+    get_db, get_filters_data, get_cars_with_filters, get_customers_by_role,
+    get_employees, get_sales_by_role, get_sale_details_by_id, get_car_info_by_id,
+    get_car_stock_and_price, update_car_quantity, insert_sale, insert_sale_detail,
+    get_report_data, get_top_sales_data, get_sales_today_data,
+    get_users_list, get_user_by_id, update_user_role, create_employee,
+    update_employee_job_title, get_customer_by_id, get_employee_by_id,
+    get_user_by_username, create_customer, create_user
+)
 from autodealer_core import calculate_sale_items, total_amount, aggregate_report, top_sales
 
 api = Blueprint('api', __name__)
@@ -147,9 +149,16 @@ def top_sales_route():
     conn = get_db()
     rows = get_top_sales_data(conn, 10)
     conn.close()
-    sales_details = [{'car_name': f"{r['brand']} {r['model']}", 'quantity': r['total_qty'], 'revenue': r['total_revenue']} for r in rows]
-    top = top_sales(sales_details, 10)
-    return jsonify([{'brand_model': car, 'total_qty': qty, 'total_revenue': revenue} for car, qty, revenue in top])
+    result = []
+    for r in rows:
+        brand_model = f"{r['brand']} {r['model']}".strip()
+        if brand_model:   # пропускаем пустые названия
+            result.append({
+                'brand_model': brand_model,
+                'total_qty': r['total_qty'],
+                'total_revenue': r['total_revenue']
+            })
+    return jsonify(result)
 
 @api.route('/api/sales_today')
 @login_required

@@ -7,5 +7,7 @@ packages/autodealer_core.egg-info/SOURCES.txt
 packages/autodealer_core.egg-info/dependency_links.txt
 packages/autodealer_core.egg-info/requires.txt
 packages/autodealer_core.egg-info/top_level.txt
-tests/test_core.py
+tests/test_api.py
+tests/test_calculations.py
+tests/test_reporting.py
 tests/test_smoke.py
