@@ -1,23 +1,31 @@
-.PHONY: help install run test clean init-db lint test-core test-api docker-build docker-run docker-up docker-down
+.PHONY: help install install-dev run test clean init-db lint test-core test-api docs serve-docs docker-build docker-run docker-up docker-down
 
 help:
-	@echo "Доступные команды:"
-	@echo "  make install       - установить зависимости и локальный пакет"
-	@echo "  make run           - запустить веб-приложение"
-	@echo "  make test          - запустить все тесты с покрытием"
-	@echo "  make test-core     - запустить только модульные тесты (autodealer_core)"
-	@echo "  make test-api      - запустить только API тесты"
-	@echo "  make clean         - удалить кэш и временные файлы"
-	@echo "  make init-db       - удалить существующую БД (осторожно!)"
-	@echo "  make lint          - проверить код flake8"
-	@echo "  make docker-build  - собрать Docker-образ"
-	@echo "  make docker-run    - запустить контейнер (без Compose)"
-	@echo "  make docker-up     - поднять сервисы через docker-compose"
-	@echo "  make docker-down   - остановить и удалить контейнеры"
+	@echo "Available commands:"
+	@echo "  make install       - install production dependencies"
+	@echo "  make install-dev   - install dependencies for development"
+	@echo "  make run           - run the application"
+	@echo "  make test          - run all tests with coverage report"
+	@echo "  make test-core     - run tests for core calculations and reporting logic"
+	@echo "  make test-api      - run tests for API endpoints and smoke tests"
+	@echo "  make clean         - delete cache files and test reports to start fresh"
+	@echo "  make init-db       - delete the existing database file to start fresh (use with caution)"
+	@echo "  make lint          - test code style with flake8"
+	@echo "  make docs          - build documentation using MkDocs"
+	@echo "  make serve-docs    - start local server for documentation preview"
+	@echo "  make docker-build  - build the Docker image"
+	@echo "  make docker-run    - start a container without docker-compose"
+	@echo "  make docker-up     - start docker-compose services"
+	@echo "  make docker-down   - stop and remove docker-compose services"
 
 install:
 	pip install -r requirements.txt
-	pip install -e .
+
+install-dev:
+	pip install -r requirements-dev.txt
+
+setup: install install-dev
+	@echo "ALL DEPENDENCIES INSTALLED. You can now run the application with 'make run' or run tests with 'make test'."
 
 run:
 	python run.py
@@ -38,10 +46,17 @@ clean:
 
 init-db:
 	rm -f autodealer.db
-	@echo "База данных удалена. При следующем запуске будет создана новая."
+	@echo "Database file 'autodealer.db' has been removed. You can now initialize a new database by running the application or using a setup script."
 
 lint:
-	flake8 autodealer/ tests/ --max-line-length=120 --ignore=E501,W503 || echo "flake8 не установлен, установите: pip install flake8"
+	flake8 autodealer/ tests/ --max-line-length=120 --ignore=E501,W503 || echo "flake8 is not installed, please download: pip install flake8"
+
+docs:
+	mkdocs build --clean
+	@echo "Documentation built in the 'site' folder."
+
+serve-docs:
+	mkdocs serve
 
 docker-build:
 	docker build -t autodealer-app .

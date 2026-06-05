@@ -1,7 +1,2 @@
-# Веб-фреймворк
 flask>=3.0.0
-
-# Тестирование
-pytest>=8.0.0
-pytest-cov>=5.0.0
 autodealer-core>=0.1.8

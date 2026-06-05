@@ -67,6 +67,17 @@ cover/
 
 *.egg-info/
 
+__pycache__/
+*.pyc
+*.db
+htmlcov/
+.pytest_cache/
+site/
+docs/_build/
+*.egg-info/
+dist/
+build/
+
 # Django stuff:
 *.log
 local_settings.py
