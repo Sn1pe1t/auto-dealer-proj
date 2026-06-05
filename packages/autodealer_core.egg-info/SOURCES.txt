@@ -1,0 +1,11 @@
+setup.py
+packages/autodealer_core/__init__.py
+packages/autodealer_core/calculations.py
+packages/autodealer_core/reporting.py
+packages/autodealer_core.egg-info/PKG-INFO
+packages/autodealer_core.egg-info/SOURCES.txt
+packages/autodealer_core.egg-info/dependency_links.txt
+packages/autodealer_core.egg-info/requires.txt
+packages/autodealer_core.egg-info/top_level.txt
+tests/test_core.py
+tests/test_smoke.py
